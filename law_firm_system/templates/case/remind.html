@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}添加提醒 - 小型律所管理系统{% endblock %}
+
+{% block page_title %}添加提醒 - {{ case.case_no or '案件' }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">提醒类型</label>
+                    <select name="remind_type" class="form-select">
+                        <option value="开庭">开庭</option>
+                        <option value="举证">举证</option>
+                        <option value="上诉">上诉</option>
+                        <option value="缴费">缴费</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">提醒日期 *</label>
+                    <input type="date" name="remind_date" class="form-control" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">关联案件</label>
+                <input type="text" class="form-control" value="{{ case.case_no or '未填案号' }} - {{ case.client.name if case.client else '未知客户' }}" disabled>
+            </div>
+            <div class="d-flex justify-content-end">
+                <a href="/case/list" class="btn btn-secondary me-2">取消</a>
+                <button type="submit" class="btn btn-primary">保存提醒</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

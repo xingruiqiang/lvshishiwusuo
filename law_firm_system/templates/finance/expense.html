@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}支出管理 - 小型律所管理系统{% endblock %}
+
+{% block page_title %}支出管理{% endblock %}
+
+{% block content %}
+<!-- 统计卡片 -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <h5>本月支出</h5>
+                <h3>¥{{ month_expense|round(2) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <h5>本年支出</h5>
+                <h3>¥{{ year_expense|round(2) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5>收支净额</h5>
+                <h3>¥{{ (year_income - year_expense)|round(2) }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 支出列表 -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>支出记录</span>
+        <a href="/finance/expense_add" class="btn btn-primary btn-sm">新增支出</a>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>支出日期</th>
+                    <th>支出类型</th>
+                    <th>备注</th>
+                    <th>金额</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exp in expenses %}
+                <tr>
+                    <td>{{ exp.pay_date or '-' }}</td>
+                    <td>{{ exp.expense_type or '-' }}</td>
+                    <td>{{ exp.remark or '-' }}</td>
+                    <td>¥{{ exp.amount or 0 }}</td>
+                    <td>
+                        <a href="/finance/expense_edit/{{ exp.id }}" class="btn btn-sm btn-warning">编辑</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">暂无支出记录</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

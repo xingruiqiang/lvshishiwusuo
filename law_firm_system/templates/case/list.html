@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}案件管理 - 小型律所管理系统{% endblock %}
+
+{% block page_title %}案件管理{% endblock %}
+
+{% block content %}
+<!-- 筛选和操作栏 -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <form class="d-flex" method="GET" action="/case/list">
+        <select name="lawyer_id" class="form-select me-2" style="width:150px;">
+            <option value="">全部律师</option>
+            {% for lawyer in lawyers %}
+            <option value="{{ lawyer.id }}" {% if lawyer_id == lawyer.id %}selected{% endif %}>{{ lawyer.real_name }}</option>
+            {% endfor %}
+        </select>
+        <select name="case_type" class="form-select me-2" style="width:150px;">
+            <option value="">全部类型</option>
+            <option value="民事" {% if case_type == '民事' %}selected{% endif %}>民事</option>
+            <option value="刑事" {% if case_type == '刑事' %}selected{% endif %}>刑事</option>
+            <option value="劳动" {% if case_type == '劳动' %}selected{% endif %}>劳动</option>
+            <option value="行政" {% if case_type == '行政' %}selected{% endif %}>行政</option>
+            <option value="执行" {% if case_type == '执行' %}selected{% endif %}>执行</option>
+        </select>
+        <select name="stage" class="form-select me-2" style="width:150px;">
+            <option value="">全部阶段</option>
+            <option value="立案" {% if stage == '立案' %}selected{% endif %}>立案</option>
+            <option value="举证" {% if stage == '举证' %}selected{% endif %}>举证</option>
+            <option value="开庭" {% if stage == '开庭' %}selected{% endif %}>开庭</option>
+            <option value="一审判决" {% if stage == '一审判决' %}selected{% endif %}>一审判决</option>
+            <option value="二审" {% if stage == '二审' %}selected{% endif %}>二审</option>
+            <option value="执行" {% if stage == '执行' %}selected{% endif %}>执行</option>
+            <option value="归档" {% if stage == '归档' %}selected{% endif %}>归档</option>
+        </select>
+        <button class="btn btn-outline-primary" type="submit">筛选</button>
+    </form>
+    <div>
+        <a href="/case/add" class="btn btn-primary">新增案件</a>
+    </div>
+</div>
+
+<!-- 案件列表表格 -->
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>案号</th>
+                    <th>客户名称</th>
+                    <th>承办律师</th>
+                    <th>开庭日期</th>
+                    <th>案件阶段</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for case in cases %}
+                <tr {% if case.court_date and (case.court_date - date.today()).days <= 3 %}class="table-danger"{% endif %}>
+                    <td>{{ case.case_no or '未填' }}</td>
+                    <td>{{ case.client.name if case.client else '未知' }}</td>
+                    <td>{{ case.lawyer.real_name if case.lawyer else '未分配' }}</td>
+                    <td>{{ case.court_date.strftime('%Y-%m-%d') if case.court_date else '未安排' }}</td>
+                    <td><span class="badge bg-info">{{ case.stage }}</span></td>
+                    <td><span class="badge {% if case.status == '在办' %}bg-warning{% else %}bg-success{% endif %}">{{ case.status }}</span></td>
+                    <td>
+                        <a href="/case/edit/{{ case.id }}" class="btn btn-sm btn-warning">编辑</a>
+                        <a href="/document/list?case_id={{ case.id }}" class="btn btn-sm btn-info">文书</a>
+                        <a href="/case/remind/{{ case.id }}" class="btn btn-sm btn-secondary">提醒</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">暂无案件数据</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 分页 -->
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if pagination.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="/case/list?page={{ pagination.prev_num }}&lawyer_id={{ lawyer_id }}&case_type={{ case_type }}&stage={{ stage }}">上一页</a>
+        </li>
+        {% endif %}
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                <li class="page-item {% if page == pagination.page %}active{% endif %}">
+                    <a class="page-link" href="/case/list?page={{ page }}&lawyer_id={{ lawyer_id }}&case_type={{ case_type }}&stage={{ stage }}">{{ page }}</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="/case/list?page={{ pagination.next_num }}&lawyer_id={{ lawyer_id }}&case_type={{ case_type }}&stage={{ stage }}">下一页</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endblock %}

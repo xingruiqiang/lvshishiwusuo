@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{% if case %}编辑案例{% else %}新增案例{% endif %} - 小型律所管理系统{% endblock %}
+
+{% block page_title %}{% if case %}编辑案例{% else %}新增案例{% endif %}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">案例标题 *</label>
+                    <input type="text" name="title" class="form-control" value="{% if case %}{{ case.title }}{% endif %}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">案件类型</label>
+                    <select name="case_type" class="form-select">
+                        <option value="">请选择</option>
+                        <option value="民事" {% if case and case.case_type == '民事' %}selected{% endif %}>民事</option>
+                        <option value="刑事" {% if case and case.case_type == '刑事' %}selected{% endif %}>刑事</option>
+                        <option value="劳动" {% if case and case.case_type == '劳动' %}selected{% endif %}>劳动</option>
+                        <option value="行政" {% if case and case.case_type == '行政' %}selected{% endif %}>行政</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">审理法院</label>
+                    <input type="text" name="court" class="form-control" value="{% if case %}{{ case.court }}{% endif %}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">裁判日期</label>
+                    <input type="date" name="judgment_date" class="form-control" value="{% if case and case.judgment_date %}{{ case.judgment_date.strftime('%Y-%m-%d') }}{% endif %}">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">关键词 / 裁判要点</label>
+                <input type="text" name="key_point" class="form-control" value="{% if case %}{{ case.key_point }}{% endif %}" placeholder="例如：违约金、合同解除">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">适用法条</label>
+                <input type="text" name="laws" class="form-control" value="{% if case %}{{ case.laws }}{% endif %}" placeholder="例如：《民法典》第 577 条">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">案例内容</label>
+                <textarea name="case_content" class="form-control" rows="10" placeholder="案件事实、裁判理由等">{% if case %}{{ case.case_content }}{% endif %}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">案例分析 / 点评</label>
+                <textarea name="analysis" class="form-control" rows="5" placeholder="律师对案例的分析和点评">{% if case %}{{ case.analysis }}{% endif %}</textarea>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <a href="/case_library/list" class="btn btn-secondary me-2">取消</a>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}收费管理 - 小型律所管理系统{% endblock %}
+
+{% block page_title %}收费管理{% endblock %}
+
+{% block content %}
+<!-- 统计卡片 -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5>本月收费</h5>
+                <h3>¥{{ month_income|round(2) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <h5>待收费</h5>
+                <h3>¥{{ pending_income|round(2) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h5>已开票未收款</h5>
+                <h3>¥{{ invoiced_not_received|round(2) }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5>本年收费</h5>
+                <h3>¥{{ year_income|round(2) }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 收费列表 -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>收费记录</span>
+        <a href="/finance/income_add" class="btn btn-primary btn-sm">新增收费</a>
+    </div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>收费日期</th>
+                    <th>客户</th>
+                    <th>案件</th>
+                    <th>收费项目</th>
+                    <th>金额</th>
+                    <th>开票状态</th>
+                    <th>收款状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inc in incomes %}
+                <tr>
+                    <td>{{ inc.pay_date or '-' }}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>{{ inc.pay_type or '-' }}</td>
+                    <td>¥{{ inc.amount or 0 }}</td>
+                    <td>
+                        {% if inc.invoice_status == 1 %}
+                        <span class="badge bg-success">已开票</span>
+                        {% else %}
+                        <span class="badge bg-warning">未开票</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if inc.pay_date %}
+                        <span class="badge bg-success">已收款</span>
+                        {% else %}
+                        <span class="badge bg-warning">未收款</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="/finance/income_edit/{{ inc.id }}" class="btn btn-sm btn-warning">编辑</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted">暂无收费记录</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{% if client %}编辑客户{% else %}新增客户{% endif %} - 小型律所管理系统{% endblock %}
+
+{% block page_title %}{% if client %}编辑客户{% else %}新增客户{% endif %}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">客户名称 *</label>
+                    <input type="text" name="name" class="form-control" required value="{% if client %}{{ client.name }}{% endif %}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">客户标签</label>
+                    <select name="tag" class="form-select">
+                        <option value="个人" {% if client and client.tag == '个人' %}selected{% endif %}>个人</option>
+                        <option value="企业" {% if client and client.tag == '企业' %}selected{% endif %}>企业</option>
+                        <option value="法律顾问单位" {% if client and client.tag == '法律顾问单位' %}selected{% endif %}>法律顾问单位</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">联系电话 *</label>
+                    <input type="tel" name="phone" class="form-control" required value="{% if client %}{{ client.phone }}{% endif %}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">身份证号/统一社会信用代码</label>
+                    <input type="text" name="id_card" class="form-control" value="{% if client %}{{ client.id_card }}{% endif %}">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label class="form-label">地址</label>
+                    <input type="text" name="address" class="form-control" value="{% if client %}{{ client.address }}{% endif %}">
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">备注</label>
+                <textarea name="remark" class="form-control" rows="3">{% if client %}{{ client.remark }}{% endif %}</textarea>
+            </div>
+            
+            <div class="d-flex justify-content-end">
+                <a href="/client/list" class="btn btn-secondary me-2">取消</a>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

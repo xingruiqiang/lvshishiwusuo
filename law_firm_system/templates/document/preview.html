@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ doc.title }} - 预览 - 小型律所管理系统{% endblock %}
+
+{% block page_title %}文书预览：{{ doc.title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>文书模板预览</span>
+        <div>
+            <a href="/document/list" class="btn btn-sm btn-secondary">返回列表</a>
+            <a href="/document/edit/{{ doc.id }}" class="btn btn-sm btn-warning">编辑</a>
+            <a href="/document/export/{{ doc.id }}" class="btn btn-sm btn-success">导出Word</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <h3 class="mb-3">{{ doc.title }}</h3>
+        <div class="mb-2">
+            <span class="badge bg-info">{{ doc.type }}</span>
+            {% if doc.is_system == 1 %}
+            <span class="badge bg-warning">系统预置</span>
+            {% else %}
+            <span class="badge bg-secondary">自定义</span>
+            {% endif %}
+        </div>
+        <hr>
+        <div class="document-content" style="white-space: pre-wrap; font-family: 'SimSun', '宋体', serif; line-height: 1.8;">
+            {{ doc.content }}
+        </div>
+    </div>
+</div>
+{% endblock %}

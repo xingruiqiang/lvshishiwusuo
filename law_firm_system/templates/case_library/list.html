@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}案例资料库 - 小型律所管理系统{% endblock %}
+
+{% block page_title %}案例资料库{% endblock %}
+
+{% block content %}
+<!-- 搜索栏 -->
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="GET" class="row g-3">
+            <div class="col-md-3">
+                <input type="text" name="keyword" class="form-control" placeholder="关键词搜索" value="{{ keyword or '' }}">
+            </div>
+            <div class="col-md-3">
+                <select name="case_type" class="form-select">
+                    <option value="">全部类型</option>
+                    <option value="民事" {% if case_type == '民事' %}selected{% endif %}>民事</option>
+                    <option value="刑事" {% if case_type == '刑事' %}selected{% endif %}>刑事</option>
+                    <option value="劳动" {% if case_type == '劳动' %}selected{% endif %}>劳动</option>
+                    <option value="行政" {% if case_type == '行政' %}selected{% endif %}>行政</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary">搜索</button>
+                <a href="/case_library/list" class="btn btn-secondary">重置</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 案例列表 -->
+<div class="row">
+    {% for case in cases %}
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ case.title }}</h5>
+                <p class="card-text">
+                    <span class="badge bg-info">{{ case.case_type }}</span>
+                    {% if case.is_system == 1 %}
+                    <span class="badge bg-warning">系统预置</span>
+                    {% else %}
+                    <span class="badge bg-secondary">自建</span>
+                    {% endif %}
+                </p>
+                <p class="card-text text-muted small">{{ case.case_content[:150] if case.case_content else '' }}...</p>
+            </div>
+            <div class="card-footer">
+                <a href="/case_library/detail/{{ case.id }}" class="btn btn-sm btn-info">查看</a>
+                <a href="/case_library/favorite/{{ case.id }}" class="btn btn-sm btn-warning">收藏</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <p class="text-center text-muted">暂无案例</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

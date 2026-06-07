@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}小型律所管理系统{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/layui@2.9.8/dist/layui.css" rel="stylesheet">
+    <style>
+        body { font-family: "Microsoft YaHei", sans-serif; }
+        .sidebar { min-height: 100vh; background: #2c3e50; }
+        .sidebar .nav-link { color: #ecf0f1; }
+        .sidebar .nav-link:hover { background: #34495e; }
+        .sidebar .nav-link.active { background: #3498db; }
+        .main-content { padding: 20px; }
+        .stat-card { border-radius: 8px; padding: 20px; margin-bottom: 15px; color: white; }
+        .stat-card.blue { background: #3498db; }
+        .stat-card.green { background: #2ecc71; }
+        .stat-card.orange { background: #e67e22; }
+        .stat-card.red { background: #e74c3c; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% if session.user_id %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏菜单 -->
+            <div class="col-md-2 sidebar p-0">
+                <div class="p-3 text-white text-center border-bottom">
+                    <h5>律所管理系统</h5>
+                </div>
+                <nav class="nav flex-column p-2">
+                    <a class="nav-link {% if request.path == '/index' or request.path == '/' %}active{% endif %}" href="/index">🏠 首页工作台</a>
+                    <a class="nav-link {% if '/client' in request.path %}active{% endif %}" href="/client/list">👥 客户管理</a>
+                    <a class="nav-link {% if '/case' in request.path and '/case_library' not in request.path %}active{% endif %}" href="/case/list">📁 案件管理</a>
+                    <a class="nav-link {% if '/document' in request.path %}active{% endif %}" href="/document/list">📄 文书模板库</a>
+                    <a class="nav-link {% if '/case_library' in request.path %}active{% endif %}" href="/case_library/list">📚 案例资料库</a>
+                    <a class="nav-link {% if '/finance' in request.path %}active{% endif %}" href="/finance/income">💰 财务管理</a>
+                    {% if session.role == 'admin' %}
+                    <a class="nav-link {% if '/system' in request.path %}active{% endif %}" href="/system/user">⚙️ 系统设置</a>
+                    {% endif %}
+                    <hr class="text-white">
+                    <a class="nav-link" href="/logout">🚪 退出登录</a>
+                </nav>
+            </div>
+            <!-- 主内容区 -->
+            <div class="col-md-10 main-content">
+                <!-- 顶部用户信息 -->
+                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <h4>{% block page_title %}首页工作台{% endblock %}</h4>
+                    <div>
+                        <span class="badge bg-primary">{{ session.real_name }}</span>
+                        <span class="badge bg-secondary">{{ session.role }}</span>
+                    </div>
+                </div>
+                <!-- 消息提示 -->
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <!-- 页面内容 -->
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    {% block login_content %}{% endblock %}
+    {% endif %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/layui@2.9.8/dist/layui.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

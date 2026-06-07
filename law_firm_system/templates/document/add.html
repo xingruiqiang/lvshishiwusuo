@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}{% if doc %}编辑文书模板{% else %}新增文书模板{% endif %} - 小型律所管理系统{% endblock %}
+
+{% block page_title %}{% if doc %}编辑文书模板{% else %}新增文书模板{% endif %}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">文书标题 *</label>
+                    <input type="text" name="title" class="form-control" required value="{% if doc %}{{ doc.title }}{% endif %}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">文书类型</label>
+                    <select name="type" class="form-select">
+                        <option value="诉讼文书" {% if doc and doc.type == '诉讼文书' %}selected{% endif %}>诉讼文书</option>
+                        <option value="非诉文书" {% if doc and doc.type == '非诉文书' %}selected{% endif %}>非诉文书</option>
+                        <option value="合同协议" {% if doc and doc.type == '合同协议' %}selected{% endif %}>合同协议</option>
+                        <option value="律师函" {% if doc and doc.type == '律师函' %}selected{% endif %}>律师函</option>
+                        <option value="委托手续" {% if doc and doc.type == '委托手续' %}selected{% endif %}>委托手续</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">文书内容 *</label>
+                <textarea name="content" class="form-control" rows="20" required>{% if doc %}{{ doc.content }}{% endif %}</textarea>
+                <small class="text-muted">提示：使用 {{ client_name }}、{{ case_no }} 等变量，系统会自动替换</small>
+            </div>
+            
+            <div class="d-flex justify-content-end">
+                <a href="/document/list" class="btn btn-secondary me-2">取消</a>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

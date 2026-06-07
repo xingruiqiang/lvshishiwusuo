@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}{{ case.title }} - 案例详情 - 小型律所管理系统{% endblock %}
+
+{% block page_title %}案例详情{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>{{ case.title }}</span>
+        <div>
+            <a href="/case_library/list" class="btn btn-sm btn-secondary">返回列表</a>
+            <a href="/case_library/edit/{{ case.id }}" class="btn btn-sm btn-warning">编辑</a>
+            <a href="/case_library/favorite/{{ case.id }}" class="btn btn-sm btn-info">
+                {% if case.is_system == 1 %}取消收藏{% else %}收藏{% endif %}
+            </a>
+            <a href="/case_library/delete/{{ case.id }}" class="btn btn-sm btn-danger" onclick="return confirm('确定删除此案例吗？')">删除</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="fw-bold">案件类型</label>
+                <p>{{ case.case_type or '-' }}</p>
+            </div>
+            <div class="col-md-3">
+                <label class="fw-bold">审理法院</label>
+                <p>{{ case.court or '-' }}</p>
+            </div>
+            <div class="col-md-3">
+                <label class="fw-bold">裁判日期</label>
+                <p>{{ case.judgment_date.strftime('%Y-%m-%d') if case.judgment_date else '-' }}</p>
+            </div>
+            <div class="col-md-3">
+                <label class="fw-bold">创建时间</label>
+                <p>{{ case.create_time.strftime('%Y-%m-%d') if case.create_time else '-' }}</p>
+            </div>
+        </div>
+
+        {% if case.key_point %}
+        <div class="mb-3">
+            <label class="fw-bold">关键词/裁判要点</label>
+            <p class="text-muted">{{ case.key_point }}</p>
+        </div>
+        {% endif %}
+
+        {% if case.laws %}
+        <div class="mb-3">
+            <label class="fw-bold">适用法条</label>
+            <p class="text-muted">{{ case.laws }}</p>
+        </div>
+        {% endif %}
+
+        <hr>
+
+        {% if case.case_content %}
+        <div class="mb-3">
+            <label class="fw-bold">案例内容</label>
+            <div class="border rounded p-3 bg-light mt-2" style="white-space: pre-wrap; line-height: 1.8;">
+                {{ case.case_content }}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if case.analysis %}
+        <div class="mb-3">
+            <label class="fw-bold">案例分析/点评</label>
+            <div class="border rounded p-3 bg-light mt-2" style="white-space: pre-wrap; line-height: 1.8;">
+                {{ case.analysis }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

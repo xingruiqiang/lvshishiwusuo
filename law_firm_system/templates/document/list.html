@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}文书模板库 - 小型律所管理系统{% endblock %}
+
+{% block page_title %}文书模板库{% endblock %}
+
+{% block content %}
+<!-- 筛选和操作栏 -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex">
+        <select class="form-select me-2" style="width:200px;" onchange="location.href='/document/list?type='+this.value">
+            <option value="">全部分类</option>
+            <option value="诉讼文书" {% if doc_type == '诉讼文书' %}selected{% endif %}>诉讼文书</option>
+            <option value="非诉文书" {% if doc_type == '非诉文书' %}selected{% endif %}>非诉文书</option>
+            <option value="合同协议" {% if doc_type == '合同协议' %}selected{% endif %}>合同协议</option>
+            <option value="律师函" {% if doc_type == '律师函' %}selected{% endif %}>律师函</option>
+            <option value="委托手续" {% if doc_type == '委托手续' %}selected{% endif %}>委托手续</option>
+        </select>
+    </div>
+    <div>
+        {% if session.role == 'admin' or session.role == 'lawyer' %}
+        <a href="/document/add" class="btn btn-primary">新增模板</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- 文书模板列表 -->
+<div class="row">
+    {% for doc in docs %}
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ doc.title }}</h5>
+                <p class="card-text">
+                    <span class="badge bg-info">{{ doc.type }}</span>
+                    {% if doc.is_system == 1 %}
+                    <span class="badge bg-warning">系统预置</span>
+                    {% else %}
+                    <span class="badge bg-secondary">自定义</span>
+                    {% endif %}
+                </p>
+                <p class="card-text text-muted small">{{ doc.content[:100] }}...</p>
+            </div>
+            <div class="card-footer">
+                <a href="/document/preview/{{ doc.id }}" class="btn btn-sm btn-info">预览</a>
+                <a href="/document/edit/{{ doc.id }}" class="btn btn-sm btn-warning">编辑</a>
+                <a href="/document/export/{{ doc.id }}" class="btn btn-sm btn-success">导出Word</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <p class="text-center text-muted">暂无文书模板</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

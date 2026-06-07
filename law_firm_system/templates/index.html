@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - 小型律所管理系统{% endblock %}
+
+{% block page_title %}首页工作台{% endblock %}
+
+{% block content %}
+<!-- 统计卡片 -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card blue">
+            <h3>{{ case_count }}</h3>
+            <p>在办案件总数</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card green">
+            <h3>¥{{ "%.2f"|format(month_income) }}</h3>
+            <p>本月营收(元)</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card orange">
+            <h3>{{ court_coming }}</h3>
+            <p>本月开庭案件</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card red">
+            <h3>{{ uninvoiced }}</h3>
+            <p>未开票收款笔数</p>
+        </div>
+    </div>
+</div>
+
+<!-- 待办提醒 -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>待办提醒</h5>
+            </div>
+            <div class="card-body">
+                {% if reminds %}
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>案件</th>
+                            <th>提醒类型</th>
+                            <th>提醒日期</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for remind in reminds %}
+                        <tr>
+                            <td>{{ remind.case_info.case_no or '未知案件' }}</td>
+                            <td><span class="badge bg-warning">{{ remind.remind_type }}</span></td>
+                            <td>{{ remind.remind_date }}</td>
+                            <td>
+                                <a href="/case/edit/{{ remind.case_id }}" class="btn btn-sm btn-primary">查看案件</a>
+                                <a href="/remind/finish/{{ remind.id }}" class="btn btn-sm btn-success">标记完成</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">暂无待办提醒</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 快捷操作 -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>快捷操作</h5>
+            </div>
+            <div class="card-body">
+                <a href="/client/add" class="btn btn-outline-primary me-2">新增客户</a>
+                <a href="/case/add" class="btn btn-outline-success me-2">新增案件</a>
+                <a href="/finance/income" class="btn btn-outline-warning me-2">登记收款</a>
+                <a href="/document/list" class="btn btn-outline-info me-2">文书模板</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

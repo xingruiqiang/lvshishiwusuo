@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}财务报表 - 小型律所管理系统{% endblock %}
+
+{% block page_title %}财务报表{% endblock %}
+
+{% block content %}
+<!-- 月份选择 -->
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="GET" class="row g-3 align-items-center">
+            <div class="col-auto">
+                <label class="form-label">报表月份</label>
+            </div>
+            <div class="col-auto">
+                <input type="month" name="month" class="form-control" value="{{ selected_month }}">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">查询</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 收支汇总 -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">收入汇总</div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <td>收费收入</td>
+                        <td class="text-end">¥{{ income_total|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>其他收入</td>
+                        <td class="text-end">¥0.00</td>
+                    </tr>
+                    <tr class="table-primary">
+                        <td><strong>收入合计</strong></td>
+                        <td class="text-end"><strong>¥{{ income_total|round(2) }}</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">支出汇总</div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <td>办公支出</td>
+                        <td class="text-end">¥{{ expense_office|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>案件成本</td>
+                        <td class="text-end">¥{{ expense_case|round(2) }}</td>
+                    </tr>
+                    <tr>
+                        <td>其他支出</td>
+                        <td class="text-end">¥{{ expense_other|round(2) }}</td>
+                    </tr>
+                    <tr class="table-danger">
+                        <td><strong>支出合计</strong></td>
+                        <td class="text-end"><strong>¥{{ expense_total|round(2) }}</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 收支净额 -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="card {% if net_income >= 0 %}bg-success{% else %}bg-danger{% endif %} text-white">
+            <div class="card-body text-center">
+                <h5>收支净额</h5>
+                <h2>¥{{ net_income|round(2) }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

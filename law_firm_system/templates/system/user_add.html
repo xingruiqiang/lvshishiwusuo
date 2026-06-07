@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}新增用户 - 小型律所管理系统{% endblock %}
+
+{% block page_title %}新增用户{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">用户名 *</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">密码 *</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">真实姓名</label>
+                    <input type="text" name="real_name" class="form-control">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">角色 *</label>
+                    <select name="role" class="form-select" required>
+                        <option value="lawyer">律师</option>
+                        <option value="assistant">助理</option>
+                        <option value="admin">管理员</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-end">
+                <a href="/system/user" class="btn btn-secondary me-2">取消</a>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
